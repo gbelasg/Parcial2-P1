@@ -1,4 +1,4 @@
 package co.edu.uniquindio.poo.model;
 
-public class EstadoOrden {
+public enum EstadoOrden {
 }

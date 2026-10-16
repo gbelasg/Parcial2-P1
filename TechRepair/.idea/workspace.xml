@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b6cd857-89cb-453b-a715-758177364cfe" name="Changes" comment="Creacion de paquetes">
+    <list default="true" id="1b6cd857-89cb-453b-a715-758177364cfe" name="Changes" comment="Creacion de otras clases">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/model/CategoriaEquipo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/model/CategoriaEquipo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/model/Repuesto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/model/Repuesto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/model/RepuestoUtilizado.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/model/RepuestoUtilizado.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +19,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Record" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -88,7 +93,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="cambio" />
     <MESSAGE value="Creacion de paquetes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Creacion de paquetes" />
+    <MESSAGE value="Creacion de otras clases" />
+    <option name="LAST_COMMIT_MESSAGE" value="Creacion de otras clases" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

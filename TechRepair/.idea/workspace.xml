@@ -4,13 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b6cd857-89cb-453b-a715-758177364cfe" name="Changes" comment="cambio">
+    <list default="true" id="1b6cd857-89cb-453b-a715-758177364cfe" name="Changes" comment="Creacion de paquetes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -80,13 +87,14 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="cambio" />
-    <option name="LAST_COMMIT_MESSAGE" value="cambio" />
+    <MESSAGE value="Creacion de paquetes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Creacion de paquetes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/Main.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/app/Main.java</url>
           <line>13</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>

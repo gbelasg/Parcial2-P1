@@ -8,14 +8,14 @@ public class Repuesto {
     private double precio;
     private int cantidadDisponible;
     private final CategoriaEquipo categoriaCompatibilidad;
-    private final TechRepair ownedByTechRepair;
+    private final Empresa ownedByEmpresa;
 
-    public Repuesto(String coodigo, String nombre, String descripcion, CategoriaEquipo categoriaCompatibilidad, TechRepair ownedByTechRepair, int cantidadDisponible, double precio) {
+    public Repuesto(String coodigo, String nombre, String descripcion, CategoriaEquipo categoriaCompatibilidad, Empresa ownedByEmpresa, int cantidadDisponible, double precio) {
         this.coodigo = coodigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.categoriaCompatibilidad = categoriaCompatibilidad;
-        this.ownedByTechRepair = ownedByTechRepair;
+        this.ownedByEmpresa = ownedByEmpresa;
         this.cantidadDisponible = cantidadDisponible;
         this.precio = precio;
     }
@@ -52,8 +52,8 @@ public class Repuesto {
         return categoriaCompatibilidad;
     }
 
-    public TechRepair getOwnedByTechRepair() {
-        return ownedByTechRepair;
+    public Empresa getOwnedByTechRepair() {
+        return ownedByEmpresa;
     }
 
     public boolean hayDisponabilidad(int cantidad){

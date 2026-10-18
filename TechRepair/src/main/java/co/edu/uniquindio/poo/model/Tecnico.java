@@ -12,12 +12,13 @@ public class Tecnico {
     private List<DetalleServicio> listaDetallesAsignados;
     private Empresa ownedByEmpresa;
 
-    public Tecnico(String codigo, String nombre, String documentoIdentidad,
+    public Tecnico(String codigo, String nombre, String documentoIdentidad, Especialidad especialidad,
                    EstadoTecnico estado, List<DetalleServicio> listaDetallesAsignados,
                    Empresa ownedByEmpresa) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.documentoIdentidad = documentoIdentidad;
+        this.especialidad= especialidad;
         this.estado = estado;
         this.listaDetallesAsignados = listaDetallesAsignados;
         this.ownedByEmpresa = ownedByEmpresa;

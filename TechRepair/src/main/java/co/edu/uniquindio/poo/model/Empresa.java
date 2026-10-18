@@ -385,19 +385,35 @@ public class Empresa {
         return mensaje;
     }
 
-    public String consultarTrabajosTecnico(String codigo){
-        Tecnico tecnico= obtenerTecnico(codigo);
-        Map<EstadoDetalle, List<DetalleServicio>> grupos= tecnico.obtenerDetallesPorEstado();
+    public String consultarTrabajosTecnico(String codigoTecnico) {
+        Optional<Tecnico> tecnicoEncontrado = buscarTecnico(codigoTecnico);
+        if (tecnicoEncontrado.isEmpty()) {
+            return "No existe un técnico con ese código";
+        }
+        Tecnico tecnico = tecnicoEncontrado.get();
 
-        String mensaje= "";
-        for (EstadoDetalle estadoDetalle: EstadoDetalle.values()){
-            List<DetalleServicio>detalleServicios= grupos.getOrDefault(estadoDetalle,List.of());
-            mensaje+= estadoDetalle+ "("+ detalleServicios.size()+"): \n";
-            for (DetalleServicio detalleServicio: detalleServicios){
-                mensaje+= detalleServicio.getCodigo() + " Equipo: " + detalleServicio.getEquipo().getCodigo() + "\n";
+        String texto = "Técnico: " + tecnico.getNombre() + " (" + tecnico.getCodigo() + ")\n\n";
+        texto += listarDetallesPorEstado(tecnico, EstadoDetalle.PENDIENTE);
+        texto += listarDetallesPorEstado(tecnico, EstadoDetalle.EN_PROCESO);
+        texto += listarDetallesPorEstado(tecnico, EstadoDetalle.FINALIZADO);
+        texto += listarDetallesPorEstado(tecnico, EstadoDetalle.CANCELADO);
+        return texto;
+    }
+    //metodo auxiliar del anterior
+    private String listarDetallesPorEstado(Tecnico tecnico, EstadoDetalle estado) {
+        String mensaje = estado + ":\n";
+        boolean hayDetalles = false;
+        for (DetalleServicio detalleServicio : tecnico.getListaDetallesAsignados()) {
+            if (detalleServicio.getEstado() == estado) {
+                mensaje += "   - " + detalleServicio.getCodigo() + " | " + detalleServicio.getServicio().getNombre()
+                        + " | Equipo: " + detalleServicio.getEquipo().getCodigo() + "\n";
+                hayDetalles = true;
             }
         }
-        return mensaje;
+        if (!hayDetalles) {
+            mensaje += "   (ninguno)\n";
+        }
+        return mensaje + "\n";
     }
     public List<Equipo> consultarEquiposPendientes(){
         List<Equipo> equiposPendientes= new ArrayList<>();

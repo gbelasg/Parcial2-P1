@@ -3,13 +3,13 @@ package co.edu.uniquindio.poo.app;
 import co.edu.uniquindio.poo.model.*;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    Empresa empresa = new Empresa("TechRepair", "012", "Armenia");
-
     static void main() {
 
         Empresa empresa = new Empresa("TechRepair", "012", "Armenia");
@@ -49,42 +49,58 @@ public class Main {
                     registrarCliente(empresa);
                     break;
                 case 2:
-                    registrarEquipo();
+                    registrarEquipo(empresa);
                     break;
                 case 3:
-
+                   registrarTecnico(empresa);
                     break;
                 case 4:
+                    registrarRepuesto(empresa);
                     break;
                 case 5:
+                    crearOrden(empresa);
                     break;
                 case 6:
+                    agregarDetalle(empresa);
                     break;
                 case 7:
+                    asignarTecnico(empresa);
                     break;
                 case 8:
+                    registrarRepuestoUtilizado(empresa);
                     break;
                 case 9:
+                    calcularValorDetalle(empresa);
                     break;
                 case 10:
+                    calcularTotalOrden(empresa);
                     break;
                 case 11:
+                    cambiarEstadoDetalle(empresa);
                     break;
                 case 12:
+                    finalizarOrden(empresa);
                     break;
                 case 13:
+                    consultarOrdenesCliente(empresa);
                     break;
                 case 14:
+                    consultarTrabajosTecnico(empresa);
                     break;
                 case 15:
+                    consultarEquiposPendientes(empresa);
                     break;
                 case 16:
+                   empresa.generarReportesServicios();
+                   JOptionPane.showMessageDialog(null, "Reporte Servicios");
                     break;
                 case 17:
+                    empresa.generarReporteTecnicos();
+                    JOptionPane.showMessageDialog(null, "Reporte de técnicos");
                     break;
                 case 18:
+                    consultarInventarioCritico(empresa);
                     break;
-
                 default:
                     JOptionPane.showMessageDialog(null, "Opción no valida");
                     break;
@@ -103,17 +119,14 @@ public class Main {
         String direccion = leerTexto("Dirección: ");
 
         JOptionPane.showMessageDialog(null,
-                empresa.registrarCliente(new Cliente(documento, nombre, telefono, correo, direccion)));
+                empresa.registrarCliente(new Cliente(documento, nombre, telefono, correo, direccion,
+                        new ArrayList<>(),empresa)));
     }
-    }
+        private static void registrarEquipo(Empresa empresa) {
+            String documentoIdentidad = leerTexto("Documento del cliente dueño:");
 
-        static void registrarEquipo() {
-            String documento = leerTexto("Documento del cliente dueño:");
+            CategoriaEquipo categoria = elegirEnum("Categoría del equipo:", CategoriaEquipo.values());
 
-            // Equipo es abstracta: primero se elige la categoría y según eso se crea la subclase
-            CategoriaEquipo categoria = clone("Categoría del equipo:", CategoriaEquipo.values());
-
-            // Datos comunes a todos los equipos (atributos de Equipo)
             String codigo = leerTexto("Código del equipo:");
             String numeroSerie = leerTexto("Número de serie:");
             String marca = leerTexto("Marca:");
@@ -124,66 +137,85 @@ public class Main {
             Equipo equipo;
             switch (categoria) {
                 case COMPUTADORES_PORTATILES: {
-                    double pantalla = leerDouble("Tamaño de pantalla (pulgadas):");
+                    Optional<Cliente> cliente = empresa.buscarCliente(documentoIdentidad);
+
+                    // 2. Pedir solo los datos específicos del portatil que recibe el constructor
+                    double tamanoPantalla = leerDouble("Tamaño de pantalla (pulgadas):");
                     int ram = leerEntero("Memoria RAM (GB):");
                     int almacenamiento = leerEntero("Almacenamiento (GB):");
                     boolean bateriaExtraible = leerSiNo("¿Tiene batería extraíble?");
-                    equipo = new ComputadorPortatil(codigo, numeroSerie, marca, modelo, anio, estadoFisico,tipoProcesador, ram, almacenamiento, tar);
+
+                    // 3. Instanciar pasando exactamente los 11 parámetros que pide el constructor
+                    equipo = new ComputadorPortatil(codigo, numeroSerie, marca, modelo, anio, estadoFisico, cliente.orElse(null), tamanoPantalla,
+                            ram, almacenamiento, bateriaExtraible);
                     break;
                 }
-                case COMPUTADORES_ESCRITORIO:: {
+                case COMPUTADORES_ESCRITORIO: {
+                    Optional<Cliente> cliente = empresa.buscarCliente(documentoIdentidad);
+
                     String procesador = leerTexto("Tipo de procesador:");
                     int ram = leerEntero("Memoria RAM (GB):");
                     int almacenamiento = leerEntero("Almacenamiento (GB):");
                     boolean tarjetaDedicada = leerSiNo("¿Tiene tarjeta gráfica dedicada?");
-                    equipo = new ComputadorEscritorio(codigo, numeroSerie, marca, modelo, anio, estadoFisico,
-                            procesador, ram, almacenamiento, tarjetaDedicada);
+
+                    equipo = new ComputadorEscritorio(codigo, numeroSerie, marca, modelo, anio,
+                            estadoFisico, cliente.orElse(null), procesador, ram, almacenamiento, tarjetaDedicada);
                     break;
                 }
                 case TELEFONO_INTELIGENTE: {
+                    Optional<Cliente> cliente = empresa.buscarCliente(documentoIdentidad);
+
                     String sistemaOperativo = leerTexto("Sistema operativo:");
                     int almacenamiento = leerEntero("Almacenamiento (GB):");
                     int bateria = leerEntero("Capacidad de batería (mAh):");
                     boolean compatible5G = leerSiNo("¿Es compatible con 5G?");
-                    equipo = new TelefonoInteligente(codigo, numeroSerie, marca, modelo, anio, estadoFisico,
-                            sistemaOperativo, almacenamiento, bateria, compatible5G);
+
+                    equipo = new TelefonoInteligente(codigo, numeroSerie, marca, modelo, anio,
+                            estadoFisico, cliente.orElse(null), sistemaOperativo, almacenamiento,
+                            bateria, compatible5G);
                     break;
                 }
                 default:
                     throw new IllegalStateException("Categoría no válida");
             }
 
-            JOptionPane.showMessageDialog(null, tr.registrarEquipo(documento, equipo));
+            JOptionPane.showMessageDialog(null, empresa.agregarEquipo(documentoIdentidad, equipo));
         }
-
     private static void registrarTecnico(Empresa empresa) {
         String codigo = leerTexto("Código del técnico:");
-        String nombre = leerTexto("Nombre:");
-        String documento = leerTexto("Documento de identidad:");
+        String nombre = leerTexto("Nombre completo:");
+        String documentoIdentidad = leerTexto("Documento de identidad:");
         Especialidad especialidad = elegirEnum("Especialidad", Especialidad.values());
         EstadoTecnico estado = elegirEnum("Estado laboral", EstadoTecnico.values());
 
         JOptionPane.showMessageDialog(null,
-                empresa.registrarTecnico(new Tecnico(codigo, nombre, documento, especialidad, estado)));
+                empresa.registrarTecnico(new Tecnico(codigo, nombre, documentoIdentidad, especialidad,
+                        estado, new ArrayList<>(), empresa)));
     }
+
+
 
     private static void registrarRepuesto(Empresa empresa) {
-        String codigo = leerTexto("Código del repuesto:");
-        String nombre = leerTexto("Nombre:");
-        String descripcion = leerTexto("Descripción:");
-        double precio = leerDouble("Precio unitario:");
-        int existencias = leerEntero("Existencias iniciales:");
-        CategoriaEquipo categoria = elegirEnum("Categoría de compatibilidad", CategoriaEquipo.values());
+    String codigo = leerTexto("Código del repuesto:");
+    String nombre = leerTexto("Nombre:");
+    String descripcion = leerTexto("Descripción:");
+    double precio = leerDouble("Precio unitario:");
+    int cantidad = leerEntero("Existencias iniciales:");
+    CategoriaEquipo categoria = elegirEnum("Categoría de compatibilidad", CategoriaEquipo.values());
 
-        mostrar(empresa.registrarRepuesto(codigo, nombre, descripcion, precio, existencias, categoria));
-    }
+    // Se instancia pasando los 7 parámetros en el orden exacto del constructor:
+    // (coodigo, nombre, descripcion, categoriaCompatibilidad, ownedByEmpresa, cantidadDisponible, precio)
+    JOptionPane.showMessageDialog(null,
+            empresa.registrarRepuesto(new Repuesto(codigo, nombre, descripcion, categoria, empresa,
+                    cantidad, precio)));
+}
 
     private static void crearOrden(Empresa empresa) {
         String codigo = leerTexto("Código de la orden:");
         String documento = leerTexto("Documento del cliente:");
         String observaciones = leerTexto("Observaciones:");
 
-        mostrar(empresa.crearOrden(codigo, documento, observaciones));
+        JOptionPane.showMessageDialog(null,empresa.crearOrden(codigo, documento, observaciones));
     }
 
     private static void agregarDetalle(Empresa empresa) {
@@ -194,7 +226,7 @@ public class Main {
         String falla = leerTexto("Falla reportada:");
 
         DetalleServicio detalle = empresa.agregarDetalle(codOrden, codDetalle, codEquipo, codServicio, falla);
-        mostrar("Detalle " + detalle.getCodigo() + " agregado a la orden " + codOrden + ".");
+        JOptionPane.showMessageDialog(null,"Detalle " + detalle.getCodigo() + " agregado a la orden " + codOrden + ".");
     }
 
     private static void asignarTecnico(Empresa empresa) {
@@ -203,7 +235,7 @@ public class Main {
         String codTecnico = leerTexto("Código del técnico:");
 
         empresa.asignarTecnico(codOrden, codDetalle, codTecnico);
-        mostrar("Técnico asignado correctamente.");
+        JOptionPane.showMessageDialog(null,"Técnico asignado correctamente.");
     }
 
     private static void registrarRepuestoUtilizado(Empresa empresa) {
@@ -213,7 +245,7 @@ public class Main {
         int cantidad = leerEntero("Cantidad utilizada:");
 
         empresa.registrarRepuestoUtilizado(codOrden, codDetalle, codRepuesto, cantidad);
-        mostrar("Repuesto registrado y descontado del inventario.");
+        JOptionPane.showMessageDialog(null ,"Repuesto registrado y descontado del inventario.");
     }
 
     private static void calcularValorDetalle(Empresa empresa) {
@@ -221,14 +253,14 @@ public class Main {
         String codDetalle = leerTexto("Código del detalle:");
 
         double valor = empresa.calcularValorDetalle(codOrden, codDetalle);
-        mostrar(String.format("Valor del detalle: $%.0f", valor));
+        JOptionPane.showMessageDialog(null,String.format("Valor del detalle: $%.0f", valor));
     }
 
     private static void calcularTotalOrden(Empresa empresa) {
         String codOrden = leerTexto("Código de la orden:");
 
         double total = empresa.calcularTotalOrden(codOrden);
-        mostrar(String.format("Total de la orden: $%.0f", total));
+        JOptionPane.showMessageDialog(null,String.format("Total de la orden: $%.0f", total));
     }
 
     private static void cambiarEstadoDetalle(Empresa empresa) {
@@ -238,45 +270,45 @@ public class Main {
         String observaciones = leerTexto("Observaciones técnicas (puede quedar vacío):");
 
         empresa.cambiarEstadoOrden(codOrden, codDetalle, estado, observaciones);
-        mostrar("Estado actualizado a " + estado + ".");
+        JOptionPane.showMessageDialog(null,"Estado actualizado a " + estado + ".");
     }
 
     private static void finalizarOrden(Empresa empresa) {
         String codOrden = leerTexto("Código de la orden:");
 
         empresa.finalizarOrden(codOrden);
-        mostrar("La orden " + codOrden + " fue finalizada.");
+        JOptionPane.showMessageDialog(null,"La orden " + codOrden + " fue finalizada.");
     }
 
     private static void consultarOrdenesCliente(Empresa empresa) {
         String documento = leerTexto("Documento del cliente:");
-        mostrar(empresa.consultarOrdenesCliente(documento));
+        JOptionPane.showMessageDialog(null,empresa.consultarOrdenesClientes(documento));
     }
 
     private static void consultarTrabajosTecnico(Empresa empresa) {
         String codigo = leerTexto("Código del técnico:");
-        mostrar(empresa.consultarTrabajosTecnico(codigo));
+        JOptionPane.showMessageDialog(null,empresa.consultarTrabajosTecnico(codigo));
     }
 
     private static void consultarEquiposPendientes(Empresa empresa) {
         List<Equipo> pendientes = empresa.consultarEquiposPendientes();
 
         if (pendientes.isEmpty()) {
-            mostrar("No hay equipos pendientes.");
+            JOptionPane.showMessageDialog(null,"No hay equipos pendientes.");
             return;
         }
         String texto = "Equipos pendientes:\n";
         for (Equipo equipo : pendientes) {
             texto += "  - " + equipo.getCodigo() + "\n";
         }
-        mostrar(texto);
+        JOptionPane.showMessageDialog(null,texto);
     }
 
     private static void consultarInventarioCritico(Empresa empresa) {
-        List<Repuesto> criticos = empresa.consultarInventarioCritico();
+        List<Repuesto> criticos = empresa.consultarInvantarioCritico();
 
         if (criticos.isEmpty()) {
-            mostrar("No hay repuestos en estado crítico.");
+            JOptionPane.showMessageDialog(null,"No hay repuestos en estado crítico.");
             return;
         }
         String texto = "Repuestos en estado crítico:\n";
@@ -284,7 +316,7 @@ public class Main {
             texto += "  - " + repuesto.getCoodigo() + " " + repuesto.getNombre()
                     + " (existencias: " + repuesto.getCantidadDisponible() + ")\n";
         }
-        mostrar(texto);
+        JOptionPane.showMessageDialog(null,texto);
     }
 
     private static void registrarHorasTrabajo(Empresa empresa) {
@@ -293,7 +325,7 @@ public class Main {
         double horas = leerDouble("Horas trabajadas:");
 
         empresa.registrarHorasTrabajo(codOrden, codDetalle, horas);
-        mostrar("Horas registradas.");
+        JOptionPane.showMessageDialog(null,"Horas registradas.");
     }
 
 
@@ -360,17 +392,13 @@ public class Main {
     }
 
 
-    private static void mostrar(String texto) {
-        JTextArea area = new JTextArea(texto);
-        area.setEditable(false);
-        JOptionPane.showMessageDialog(null, new JScrollPane(area));
+
     }
 
 
-    private static void mostrarError(String mensaje) {
-        JOptionPane.showMessageDialog(null, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-}
 
-}
-}
+
+
+
+
+

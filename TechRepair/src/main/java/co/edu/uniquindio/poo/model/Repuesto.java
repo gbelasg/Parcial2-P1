@@ -83,4 +83,17 @@ public class Repuesto {
     public boolean esCompatibleCon(Equipo equipo) {
         return equipo.getCategoria() == categoriaCompatibilidad;
     }
+
+    @Override
+    public String toString() {
+        return "Repuesto{" +
+                "coodigo='" + coodigo + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", precio=" + precio +
+                ", cantidadDisponible=" + cantidadDisponible +
+                ", categoriaCompatibilidad=" + categoriaCompatibilidad +
+                ", ownedByEmpresa=" + ownedByEmpresa +
+                '}';
+    }
 }

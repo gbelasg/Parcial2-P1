@@ -80,4 +80,7 @@ public class Repuesto {
     }
 
 
+    public boolean esCompatibleCon(Equipo equipo) {
+        return equipo.getCategoria() == categoriaCompatibilidad;
+    }
 }

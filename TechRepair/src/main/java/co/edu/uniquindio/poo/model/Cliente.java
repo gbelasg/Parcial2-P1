@@ -12,18 +12,18 @@ public class Cliente {
     private String direccion;
     private Equipo equipo;
     private List<Equipo> listaEquipos;
-    private TechRepair ownedByTechRepair;
+    private Empresa ownedByEmpresa;
 
     public Cliente(String documentoIdentidad, String nombreCompleto, String telefono,
                    String correo, String direccion, List<Equipo> listaEquipos,
-                   TechRepair ownedByTechRepair) {
+                   Empresa ownedByEmpresa) {
         this.documentoIdentidad = documentoIdentidad;
         this.nombreCompleto = nombreCompleto;
         this.telefono = telefono;
         this.correo = correo;
         this.direccion = direccion;
         this.listaEquipos = new ArrayList<>();
-        this.ownedByTechRepair = ownedByTechRepair;
+        this.ownedByEmpresa = ownedByEmpresa;
     }
 
     public String getDocumentoIdentidad() {
@@ -74,15 +74,15 @@ public class Cliente {
         this.listaEquipos = listaEquipos;
     }
 
-    public TechRepair getOwnedByTechRepair() {
-        return ownedByTechRepair;
+    public Empresa getOwnedByEmpresa() {
+        return ownedByEmpresa;
     }
 
-    public void setOwnedByTechRepair(TechRepair ownedByTechRepair) {
-        this.ownedByTechRepair = ownedByTechRepair;
+    public void setOwnedByTechRepair(Empresa ownedByEmpresa) {
+        this.ownedByEmpresa = ownedByEmpresa;
     }
 
-    public void agregarEquipo(){
+    public void agregarEquipo(Equipo equipo){
         equipo.setOwnedByCliente(this);
         listaEquipos.add(equipo);
     }
@@ -128,7 +128,7 @@ public class Cliente {
                 ", direccion='" + direccion + '\'' +
                 ", equipo=" + equipo +
                 ", listaEquipos=" + listaEquipos +
-                ", ownedByTechRepair=" + ownedByTechRepair +
+                ", ownedByTechRepair=" + ownedByEmpresa +
                 '}';
     }
 }

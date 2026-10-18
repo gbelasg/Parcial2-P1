@@ -1,7 +1,9 @@
 package co.edu.uniquindio.poo.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class Empresa {
@@ -64,52 +66,39 @@ public class Empresa {
             return false;
         }
     }
-    public void eliminarCliente(String documentoIdentidad) {
+    public boolean eliminarCliente(String documentoIdentidad) {
         Optional<Cliente> clienteEncontrado = buscarCliente(documentoIdentidad);
 
-        clienteEncontrado.ifPresent(cliente -> {
-            listaOrdenes.stream()
-                    .filter(o -> o.getCliente() == cliente)
-                    .findAny()//no cambia la lista principal
-                    .ifPresent(o -> {
-                        throw new IllegalStateException("El cliente tiene órdenes registradas y no puede eliminarse");
-                    });
-
-            listaClientes.remove(cliente);
-        });
+        if (clienteEncontrado.isEmpty()) {
+            return false;
+        }
+        Cliente cliente = clienteEncontrado.get();
+        if (listaOrdenes.stream().anyMatch(o -> o.getCliente() == cliente)) {
+            throw new IllegalStateException("No se puede eliminar: el cliente tiene órdenes registradas");
+        }
+        return listaClientes.remove(cliente);
     }
 
 
 
 
     //Equipo
-    public String registrarEquipo(String documentoIdentidad, Equipo equipo) {
-        Optional<Cliente> clienteEncontrado = buscarCliente(documentoIdentidad);
-        if (clienteEncontrado.isEmpty()) {
-            return "No existe un cliente con ese documento de identidad";
+    public boolean agregarEquipo(String documentoCliente, Equipo equipo) {
+        Optional<Cliente> cliente = buscarCliente(documentoCliente);
+        if (cliente.isEmpty() || equipo == null || buscarEquipo(equipo.getCodigo()).isPresent()) {
+            return false;
         }
-
-        if (buscarEquipo(equipo.getCodigo()).isPresent()) {
-            return "Ya existe un equipo con ese código";
-        }
-
-        Optional<Equipo> serieRepetida = listaClientes.stream()
-                .flatMap(c -> c.getListaEquipos().stream()) //flatmap junta los elementos de los dos stream
-                .filter(e -> e.getNumeroSerie().equals(equipo.getNumeroSerie()))
-                .findAny();
-        if (serieRepetida.isPresent()) {
-            return "Ya existe un equipo con ese número de serie";
-        }
-
-        clienteEncontrado.get().agregarEquipo(equipo);
-        return "El equipo ha sido registrado exitosamente";
+        cliente.get().agregarEquipo(equipo);
+        return true;
     }
+
     public Optional<Equipo> buscarEquipo(String codigo) {
         return listaClientes.stream()
-                .flatMap(cliente -> cliente.getListaEquipos().stream())
-                .filter(equipo -> equipo.getCodigo().equals(codigo))
+                .map(c -> c.buscarEquipo(codigo))
+                .flatMap(Optional::stream)
                 .findFirst();
     }
+
     public boolean actualizarEquipo(String codigo, String numeroSerieNuevo, String marcaNueva,
                                     String modeloNuevo, int anioNuevo, String estadoFisicoNuevo) {
         Optional<Equipo> equipoEncontrado = buscarEquipo(codigo);
@@ -162,7 +151,7 @@ public class Empresa {
         return listaTecnicos.stream().filter
                 (tecnico->tecnico.getCodigo().equals(codigo)).findFirst();
     }
-    public boolean actualizarTecnico(String codigo, String nombreNuevo, String documentoIdentidadNuevo,
+    public boolean actualizarTecnico(String codigo, String nombreNuevo, String documentoIdentidadNuevo
                                      , EstadoTecnico estadoNuevo) {
         Optional<Tecnico> tecnicoEncontrado= buscarTecnico(codigo);
         if (tecnicoEncontrado.isPresent()) {
@@ -238,7 +227,7 @@ public class Empresa {
             return "No existe un cliente con ese documento de identidad";
         }
 
-        listaOrdenes.add(new OrdenServicio(codigo, observaciones, clienteEncontrado.get(), this));
+        listaOrdenes.add(new OrdenServicio(codigo, LocalDate.now(), observaciones, EstadoOrden.ABIERTA, clienteEncontrado.get(), new ArrayList<>(),this));
         return "La orden ha sido creada exitosamente";
     }
 
@@ -256,16 +245,210 @@ public class Empresa {
             listaOrdenes.remove(orden);
         });
     }
+    //Servicios
+    public boolean agregarServicio(Servicio servicio) {
+        if (servicio == null || buscarServicio(servicio.getCodigo()).isPresent()) {
+            return false;
+        }
+        servicio.setOwnedByEmpresa(this);
+        return listaServicios.add(servicio);
+    }
+
+    public Optional<Servicio> buscarServicio(String codigo) {
+        return listaServicios.stream()
+                .filter(s -> s.getCodigo().equalsIgnoreCase(codigo))
+                .findFirst();
+    }
+
+    public boolean eliminarServicio(String codigo) {
+        Optional<Servicio> encontrado = buscarServicio(codigo);
+        if (encontrado.isEmpty()) {
+            return false;
+        }
+        Servicio servicio = encontrado.get();
+        for (OrdenServicio orden : listaOrdenes) {
+            for (DetalleServicio d : orden.getListaDetalles()) {
+                if (d.getServicio() == servicio) {
+                    throw new IllegalStateException("No se puede eliminar: el servicio ya se usa en la orden "
+                            + orden.getCodigo());
+                }
+            }
+        }
+        return listaServicios.remove(servicio);
+    }
+
+
+    //Metodos privados
+
+    private Cliente obtenerCliente(String documento) {
+        return buscarCliente(documento)
+                .orElseThrow(() -> new IllegalArgumentException("No existe el cliente " + documento));
+    }
+
+    private Equipo obtenerEquipo(String codigo) {
+        return buscarEquipo(codigo)
+                .orElseThrow(() -> new IllegalArgumentException("No existe el equipo " + codigo));
+    }
+
+    private Tecnico obtenerTecnico(String codigo) {
+        return buscarTecnico(codigo)
+                .orElseThrow(() -> new IllegalArgumentException("No existe el técnico " + codigo));
+    }
+
+    private Repuesto obtenerRepuesto(String codigo) {
+        return buscarRespuesto(codigo)
+                .orElseThrow(() -> new IllegalArgumentException("No existe el repuesto " + codigo));
+    }
+
+    private OrdenServicio obtenerOrden(String codigo) {
+        return buscarOrden(codigo)
+                .orElseThrow(() -> new IllegalArgumentException("No existe la orden " + codigo));
+    }
+
+    private Servicio obtenerServicio(String codigo) {
+        return buscarServicio(codigo)
+                .orElseThrow(() -> new IllegalArgumentException("No existe el servicio " + codigo));
+    }
+
+    private DetalleServicio obtenerDetalle(OrdenServicio orden, String codigo) {
+        return orden.buscarDetalle(codigo)
+                .orElseThrow(() -> new IllegalArgumentException("No existe el detalle " + codigo));
+    }
     public DetalleServicio agregarDetalle(String codOrden, String codDetalle, String codEquipo,
                                           String codServicio, String descripcionFalla) {
-        OrdenServicio orden = obtenerOrden(codOrden);
+        OrdenServicio ordenServicio = obtenerOrden(codOrden); //busqueda de objetos
         Equipo equipo = obtenerEquipo(codEquipo);
         Servicio servicio = obtenerServicio(codServicio);
 
-        DetalleServicio detalle = new DetalleServicio(codDetalle, equipo, servicio, descripcionFalla);
-        orden.agregarDetalle(detalle);
-        return detalle;
+        DetalleServicio detalleServicio = new DetalleServicio(codDetalle, descripcionFalla, 0, "",
+                EstadoDetalle.PENDIENTE, equipo, servicio, null, new ArrayList<>(), ordenServicio);
+
+       ordenServicio.agregarDetalle(detalleServicio);
+
+        return detalleServicio;
     }
+
+    public void asignarTecnico(String codOrden, String codDetalle, String codTecnico){
+        DetalleServicio detalleServicio= obtenerDetalle(obtenerOrden(codOrden), codDetalle);
+        Tecnico tecnico=obtenerTecnico(codTecnico);
+        detalleServicio.asignarTecnico(tecnico);
+    }
+    public void registrarRepuestoUtilizado(String codOrden, String codDetalle, String codTecnico, int cantidad){
+        DetalleServicio detalleServicio=obtenerDetalle(obtenerOrden(codOrden), codDetalle);
+        Repuesto repuesto= obtenerRepuesto(codTecnico);
+        detalleServicio.agregarRepuestoUtilizado(repuesto, cantidad);
+    }
+    public void registrarHorasTrabajo(String codOrden,String codDetalle, double horas){
+        DetalleServicio detalleServicio= obtenerDetalle(obtenerOrden(codOrden), codDetalle);
+            detalleServicio.registrarHoras(horas);
+    }
+    public double calcularValorDetalle(String codOrden, String cosDetalle){
+        DetalleServicio detalleServicio= obtenerDetalle(obtenerOrden(codOrden),cosDetalle);
+        return detalleServicio.calcularValor();
+    }
+    public double calcularTotalOrden(String codOrden){
+        return obtenerOrden(codOrden).calcularTotal();
+    }
+    public void cambiarEstadoOrden(String codOrden, String codDetalle, EstadoDetalle estado, String observacion){
+        DetalleServicio detalleServicio=obtenerDetalle(obtenerOrden(codOrden), codDetalle);
+        detalleServicio.cambiarEstado(estado, observacion);
+    }
+    public void finalizarOrden(String codOrden){
+        obtenerOrden(codOrden).finalizar();
+    }
+    public String consultarOrdenesClientes(String documento){
+        Cliente cliente= obtenerCliente(documento);
+        String mensaje="";
+        boolean tieneOrdenes= false;
+        for (OrdenServicio ordenServicio: listaOrdenes){
+            if (ordenServicio.getCliente()==cliente){
+                tieneOrdenes= true;
+                mensaje+=
+                        "Orden " + ordenServicio.getCodigo()
+                                + " Fecha: " + ordenServicio.getFecha()
+                                + " | Estado: " + ordenServicio.getEstado()
+                                + " | Valor total: $" + ordenServicio.calcularTotal() ;
+
+                for (DetalleServicio detalleServicio : ordenServicio.getListaDetalles()) {
+                    mensaje +=  detalleServicio.getCodigo()
+                            + " Equipo: " + detalleServicio.getEquipo().getCodigo()
+                            + " Servicio: " + detalleServicio.getServicio().getNombre()
+                            + " Estado: " + detalleServicio.getEstado()
+                            + " Valor: $" + detalleServicio.calcularValor() + "\n";
+                }
+            }
+        }
+
+        if (!tieneOrdenes) {
+            return "El cliente " + documento + " no tiene órdenes registradas.";
+        }
+        return mensaje;
+    }
+
+    public String consultarTrabajosTecnico(String codigo){
+        Tecnico tecnico= obtenerTecnico(codigo);
+        Map<EstadoDetalle, List<DetalleServicio>> grupos= tecnico.obtenerDetallesPorEstado();
+
+        String mensaje= "";
+        for (EstadoDetalle estadoDetalle: EstadoDetalle.values()){
+            List<DetalleServicio>detalleServicios= grupos.getOrDefault(estadoDetalle,List.of());
+            mensaje+= estadoDetalle+ "("+ detalleServicios.size()+"): \n";
+            for (DetalleServicio detalleServicio: detalleServicios){
+                mensaje+= detalleServicio.getCodigo() + " Equipo: " + detalleServicio.getEquipo().getCodigo() + "\n";
+            }
+        }
+        return mensaje;
+    }
+    public List<Equipo> consultarEquiposPendientes(){
+        List<Equipo> equiposPendientes= new ArrayList<>();
+        for (OrdenServicio ordenServicio: listaOrdenes){
+            for (DetalleServicio detalleServicio: ordenServicio.getListaDetalles()){
+                if (detalleServicio.estaPendiente()&& !equiposPendientes.contains(detalleServicio.getEquipo())){
+                    equiposPendientes.add(detalleServicio.getEquipo());
+                }
+            }
+        }
+        return equiposPendientes;
+    }
+
+    public String generarReportesServicios(){
+        String mensaje= "Reporte Servicios \n";
+
+        for (TipoServicio tipoServicio:TipoServicio.values()){
+            int cantidad=0;
+            double total= 0;
+            for (OrdenServicio ordenServicio: listaOrdenes){
+                for (DetalleServicio detalleServicio: ordenServicio.getListaDetalles()){
+                    if (detalleServicio.getServicio().getTipo()==tipoServicio){
+                        cantidad++;
+                        total+= detalleServicio.calcularValor();
+                    }
+                }
+            }
+            mensaje += tipoServicio + ": cantidad=" + cantidad
+                    + ", total facturado=$" +  total + "\n";
+        }
+        return mensaje;
+    }
+    public String generarReporteTecnicos(){
+        String mensaje= "";
+        for (Tecnico tecnico: listaTecnicos){
+            mensaje+= tecnico.getCodigo() + " - " + tecnico.getNombre()
+                    + ": intervenciones finalizadas=" + tecnico.contarIntervencionesFinalizadas()
+                    + ", valor servicios=$" +  tecnico.calcularValorServiciosAtendidos()
+                    + "\n";
+        }
+        return mensaje;
+    }
+    public List<Repuesto> consultarInvantarioCritico(){
+        return listaRepuestos.stream().filter(Repuesto::esCritico).toList();
+    }
+
+
+
+
+
+
 
 
 }

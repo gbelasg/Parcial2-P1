@@ -12,18 +12,18 @@ public class OrdenServicio {
     private EstadoOrden estado;
     private Cliente cliente;
     private List<DetalleServicio> listaDetalles;
-    private TechRepair ownedByTechRepair;
+    private Empresa ownedByEmpresa;
 
     public OrdenServicio(String codigo, LocalDate fecha, String observaciones,
                          EstadoOrden estado, Cliente cliente,
-                         List<DetalleServicio> listaDetalles, TechRepair ownedByTechRepair) {
+                         List<DetalleServicio> listaDetalles, Empresa ownedByEmpresa) {
         this.codigo = codigo;
         this.fecha = LocalDate.now();
         this.observaciones = observaciones;
         this.estado = EstadoOrden.ABIERTA;
         this.cliente = cliente;
         this.listaDetalles = new ArrayList<>();
-        this.ownedByTechRepair = ownedByTechRepair;
+        this.ownedByEmpresa = ownedByEmpresa;
 
     }
 
@@ -75,19 +75,19 @@ public class OrdenServicio {
         this.listaDetalles = listaDetalles;
     }
 
-    public TechRepair getOwnedByTechRepair() {
-        return ownedByTechRepair;
+    public Empresa getOwnedByEmpresa() {
+        return ownedByEmpresa;
     }
 
-    public void setOwnedByTechRepair(TechRepair ownedByTechRepair) {
-        this.ownedByTechRepair = ownedByTechRepair;
+    public void setOwnedByEmpresa(Empresa ownedByTechRepair) {
+        this.ownedByEmpresa = ownedByTechRepair;
     }
     public void validarEsEditable(){
         if(EstadoOrden.ABIERTA != estado && EstadoOrden.EN_PROCESO != estado){
             throw new IllegalStateException("La orden esta" + estado + "ya no se puede modificar");
         }
     }
-    public void agregarDetalle(){
+    public void agregarDetalle(DetalleServicio detalle){
         if(buscarDetalle(detalle.getCodigo()).isPresent()){
             throw new IllegalStateException("El detalle" + detalle.getCodigo()
                     + "ya existe en la orden" + codigo);
@@ -186,7 +186,7 @@ public class OrdenServicio {
                 ", estado=" + estado +
                 ", cliente=" + cliente +
                 ", listaDetalles=" + listaDetalles +
-                ", ownedByTechRepair=" + ownedByTechRepair +
+                ", ownedByTechRepair=" + ownedByEmpresa +
                 '}';
     }
 }

@@ -5,7 +5,8 @@ public abstract class Servicio {
     private String nombre;
     private String descripcion;
     private double tarifaBase;
-    private TechRepair ownedByTechRepair;
+    private Empresa ownedByEmpresa
+            ;
 
     public Servicio(String codigo, String nombre, String descripcion, double tarifaBase) {
         this.codigo = codigo;
@@ -46,12 +47,12 @@ public abstract class Servicio {
         this.tarifaBase = tarifaBase;
     }
 
-    public TechRepair getOwnedByTechRepair() {
-        return ownedByTechRepair;
+    public Empresa getOwnedByEmpresa() {
+        return ownedByEmpresa;
     }
 
-    public void setOwnedByTechRepair(TechRepair ownedByTechRepair) {
-        this.ownedByTechRepair = ownedByTechRepair;
+    public void setOwnedByEmpresa(Empresa ownedByTechRepair) {
+        this.ownedByEmpresa = ownedByTechRepair;
     }
     public abstract double calcularCosto(DetalleServicio detalle);
     public abstract TipoServicio getTipo();
@@ -70,7 +71,7 @@ public abstract class Servicio {
                 ", nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 ", tarifaBase=" + tarifaBase +
-                ", ownedByTechRepair=" + ownedByTechRepair +
+                ", ownedByTechRepair=" + ownedByEmpresa +
                 '}';
     }
 }

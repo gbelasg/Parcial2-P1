@@ -10,17 +10,17 @@ public class Tecnico {
     private Especialidad especialidad;
     private EstadoTecnico estado;
     private List<DetalleServicio> listaDetallesAsignados;
-    private TechRepair ownedByTechRepair;
+    private Empresa ownedByEmpresa;
 
     public Tecnico(String codigo, String nombre, String documentoIdentidad,
                    EstadoTecnico estado, List<DetalleServicio> listaDetallesAsignados,
-                   TechRepair ownedByTechRepair) {
+                   Empresa ownedByEmpresa) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.documentoIdentidad = documentoIdentidad;
         this.estado = estado;
         this.listaDetallesAsignados = listaDetallesAsignados;
-        this.ownedByTechRepair = ownedByTechRepair;
+        this.ownedByEmpresa = ownedByEmpresa;
     }
 
     public String getCodigo() {
@@ -63,12 +63,12 @@ public class Tecnico {
         this.listaDetallesAsignados = listaDetallesAsignados;
     }
 
-    public TechRepair getOwnedByTechRepair() {
-        return ownedByTechRepair;
+    public Empresa getOwnedByTechRepair() {
+        return ownedByEmpresa;
     }
 
-    public void setOwnedByTechRepair(TechRepair ownedByTechRepair) {
-        this.ownedByTechRepair = ownedByTechRepair;
+    public void setOwnedByTechRepair(Empresa ownedByTechRepair) {
+        this.ownedByEmpresa = ownedByTechRepair;
     }
 
     public boolean estaActivo() {
@@ -151,7 +151,7 @@ public class Tecnico {
                 ", especialidad=" + especialidad +
                 ", estado=" + estado +
                 ", listaDetallesAsignados=" + listaDetallesAsignados +
-                ", ownedByTechRepair=" + ownedByTechRepair +
+                ", ownedByTechRepair=" + ownedByEmpresa +
                 '}';
     }
 }

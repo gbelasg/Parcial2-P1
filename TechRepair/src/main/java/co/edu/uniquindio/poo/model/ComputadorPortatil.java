@@ -50,7 +50,7 @@ public class ComputadorPortatil extends Equipo {
     }
     @Override
     public CategoriaEquipo getCategoria() {
-        return CategoriaEquipo.COMPUTADOR_PORTATIL;
+        return CategoriaEquipo.COMPUTADORES_PORTATILES;
     }
 
     @Override

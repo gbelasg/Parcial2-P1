@@ -21,7 +21,7 @@ public class ComputadorEscritorio extends Equipo {
 
     @Override
     public CategoriaEquipo getCategoria() {
-        return CategoriaEquipo.COMPUTADOR_ESCRITORIO;
+        return CategoriaEquipo.COMPUTADORES_ESCRITORIO;
     }
 
     @Override

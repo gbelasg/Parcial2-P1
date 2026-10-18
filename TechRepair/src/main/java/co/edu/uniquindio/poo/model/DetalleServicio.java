@@ -12,13 +12,13 @@ public class DetalleServicio {
     private Equipo equipo;
     private Servicio servicio;
     private Tecnico tecnico;
-    private List<Repuesto> listaRepuestosUtilizados;
+    private List<RepuestoUtilizado> listaRepuestosUtilizados;
     private OrdenServicio ownedByOrden;
 
     public DetalleServicio(String codigo, String descripcionFalla, double horasT,
                            String observaciones, EstadoDetalle estado, Equipo equipo,
                            Servicio servicio, Tecnico tecnico,
-                           List<Repuesto> listaRepuestosUtilizados, OrdenServicio ownedByOrden) {
+                           List<RepuestoUtilizado> listaRepuestosUtilizados, OrdenServicio ownedByOrden) {
         this.codigo = codigo;
         this.descripcionFalla = descripcionFalla;
         this.horasT = 0;
@@ -95,11 +95,11 @@ public class DetalleServicio {
         this.tecnico = tecnico;
     }
 
-    public List<Repuesto> getListaRepuestosUtilizados() {
+    public List<RepuestoUtilizado> getListaRepuestosUtilizados() {
         return listaRepuestosUtilizados;
     }
 
-    public void setListaRepuestosUtilizados(List<Repuesto> listaRepuestosUtilizados) {
+    public void setListaRepuestosUtilizados(List<RepuestoUtilizado> listaRepuestosUtilizados) {
         this.listaRepuestosUtilizados = listaRepuestosUtilizados;
     }
 
@@ -129,10 +129,10 @@ public class DetalleServicio {
         if (!repuesto.esCompatibleCon(equipo)) {
             throw new IllegalStateException("El repuesto " + repuesto.getNombre() + " es para "
                     + repuesto.getCategoriaCompatibilidad() + " y el equipo es " +
-                    equipo.getCategoria() + );
+                    equipo.getCategoria() );
         }
         repuesto.descontar(cantidad);
-        listaRepuestosUtilizados.add(new RepuestoUtilizado(repuesto, cantidad));
+        listaRepuestosUtilizados.add(new RepuestoUtilizado(repuesto, cantidad, repuesto.getPrecio()));
     }
     public void registrarHoras(double horas){
         if (horas <= 0) {
@@ -163,7 +163,7 @@ public class DetalleServicio {
     }
 
     private void devolverRepuestos() {
-        for (RepuestoUtilizado ru : listaRepuestosUtilizados) {
+        for ( RepuestoUtilizado ru : listaRepuestosUtilizados) {
             ru.repuesto().reponer(ru.cantidad());
         }
         listaRepuestosUtilizados.clear();

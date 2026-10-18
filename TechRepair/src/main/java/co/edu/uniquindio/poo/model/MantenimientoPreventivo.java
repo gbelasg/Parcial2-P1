@@ -39,9 +39,9 @@ public class MantenimientoPreventivo extends Servicio {
     @Override
     public double calcularCosto(DetalleServicio detalle) {
         CategoriaEquipo categoria = detalle.getEquipo().getCategoria();
-        if (categoria == CategoriaEquipo.COMPUTADOR_PORTATIL) {
+        if (categoria == CategoriaEquipo.COMPUTADORES_PORTATILES) {
             return tarifaPortatil;
-        } else if (categoria == CategoriaEquipo.COMPUTADOR_ESCRITORIO) {
+        } else if (categoria == CategoriaEquipo.COMPUTADORES_ESCRITORIO) {
             return tarifaEscritorio;
         } else if (categoria == CategoriaEquipo.TELEFONO_INTELIGENTE) {
             return tarifaTelefono;

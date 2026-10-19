@@ -176,6 +176,20 @@ public class OrdenServicio {
 
         texto += "\nTOTAL ORDEN: $" + calcularTotal();
         return texto;
+
+    }
+    public List<Equipo> obtenerEquipos() {
+        List<Equipo> equipos = new ArrayList<>();
+
+        for (DetalleServicio detalle : listaDetalles) {
+            Equipo equipo = detalle.getEquipo();
+
+            if (equipo != null && !equipos.contains(equipo)) {
+                equipos.add(equipo);
+            }
+        }
+
+        return equipos;
     }
     @Override
     public String toString() {

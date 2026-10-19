@@ -16,7 +16,7 @@ public class Main {
 
         cargarDatosPrueba(empresa);
 
-        String menu = "===TECH REPAIR===\n\n"
+        String menu = "TECH REPAIR\n\n"
 
                 + "1. Registrar Cliente\n"
                 + "2. Registrar equipo\n"

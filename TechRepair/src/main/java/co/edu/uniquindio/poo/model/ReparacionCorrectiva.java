@@ -10,9 +10,9 @@ public class ReparacionCorrectiva extends Servicio{
 
     @Override
     public double calcularCosto(DetalleServicio detalle) {
-        return detalle.getHorasT() * valorHora + calcularCosto();
+        return detalle.getHorasT() * valorHora
+                + detalle.calcularCostoRepuestos();
     }
-
     @Override
     public TipoServicio getTipo() {
         return TipoServicio.REPARACION_CORRECTIVA;
@@ -41,4 +41,5 @@ public class ReparacionCorrectiva extends Servicio{
                 "valorHora=" + valorHora +
                 '}';
     }
+
 }

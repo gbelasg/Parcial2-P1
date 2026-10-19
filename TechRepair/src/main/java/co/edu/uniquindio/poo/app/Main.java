@@ -101,6 +101,9 @@ public class Main {
                 case 18:
                     consultarInventarioCritico(empresa);
                     break;
+                case 0:
+                    JOptionPane.showMessageDialog(null, "Hasta luego.");
+                    break;
                 default:
                     JOptionPane.showMessageDialog(null, "Opción no valida");
                     break;
@@ -329,11 +332,6 @@ public class Main {
     }
 
 
-    //DATOS PRUEBA
-
-    private static void cargarDatosPrueba(Empresa empresa) {
-    }
-
     //Lecturas
     private static String leerTexto(String mensaje) {
         String texto = JOptionPane.showInputDialog(null, mensaje);
@@ -390,10 +388,91 @@ public class Main {
         }
         throw new IllegalStateException("Opción no válida");
     }
+    private static void cargarDatosPrueba(Empresa empresa) {
+        try {
+            // 1. REGISTRO DE CLIENTES
+            Cliente c1 = new Cliente("1001", "Carlos Pérez", "3101234567", "carlos@email.com", "Calle 10 #14-20", new ArrayList<>(), empresa);
+            Cliente c2 = new Cliente("1002", "María Gómez", "3207654321", "maria@email.com", "Av. Bolivar #5-12", new ArrayList<>(), empresa);
+            Cliente c3 = new Cliente("1003", "Juan Rodriguez", "3001112233", "juan@email.com", "Cra 19 #22-10", new ArrayList<>(), empresa);
 
+            empresa.registrarCliente(c1);
+            empresa.registrarCliente(c2);
+            empresa.registrarCliente(c3);
 
+            // 2. REGISTRO DE EQUIPOS
+            Equipo eq1 = new ComputadorPortatil("EQ01", "SN-PORT-001", "Lenovo", "ThinkPad T14", 2022, "Bueno", c1, 14.0, 16, 512, false);
+            Equipo eq2 = new ComputadorEscritorio("EQ02", "SN-PC-002", "ASUS", "ROG Strix", 2023, "Excelente", c2, "Intel i7 13700K", 32, 1024, true);
+            Equipo eq3 = new TelefonoInteligente("EQ03", "SN-TEL-003", "Samsung", "Galaxy S23", 2023, "Pantalla rayada", c1, "Android", 256, 3900, true);
+            Equipo eq4 = new ComputadorPortatil("EQ04", "SN-PORT-004", "HP", "Pavilion 15", 2021, "Desgastado", c3, 15.6, 8, 256, true);
 
+            empresa.agregarEquipo("1001", eq1);
+            empresa.agregarEquipo("1002", eq2);
+            empresa.agregarEquipo("1001", eq3);
+            empresa.agregarEquipo("1003", eq4);
+
+            // 3. REGISTRO DE TÉCNICOS
+            // Ajusta las especialidades y estados según los valores reales de tus Enums
+            Tecnico t1 = new Tecnico("TEC01", "Andrés López", "80111", Especialidad.COMPUTADORES, EstadoTecnico.ACTIVO, new ArrayList<>(), empresa);
+            Tecnico t2 = new Tecnico("TEC02", "Laura Martínez", "80222", Especialidad.SOPORTE_GENERAL, EstadoTecnico.ACTIVO, new ArrayList<>(), empresa);
+
+            empresa.registrarTecnico(t1);
+            empresa.registrarTecnico(t2);
+
+            // 4. REGISTRO DE REPUESTOS
+            // (incluye algunos con bajo stock para probar la consulta de inventario crítico)
+            Repuesto r1 = new Repuesto("REP01", "SSD NVMe 512GB", "Disco de estado sólido Kingston", CategoriaEquipo.COMPUTADORES_PORTATILES, empresa, 10, 180000.0);
+            Repuesto r2 = new Repuesto("REP02", "Módulo RAM 8GB DDR4", "Memoria SODIMM Crucial", CategoriaEquipo.COMPUTADORES_PORTATILES, empresa, 2, 95000.0); // Stock crítico
+            Repuesto r3 = new Repuesto("REP03", "Pantalla OLED S23", "Módulo original de pantalla", CategoriaEquipo.TELEFONO_INTELIGENTE, empresa, 1, 450000.0); // Stock crítico
+            Repuesto r4 = new Repuesto("REP04", "Pasta Térmica 5g", "Artic MX-4 disipación alta", CategoriaEquipo.COMPUTADORES_ESCRITORIO, empresa, 15, 35000.0);
+
+            empresa.registrarRepuesto(r1);
+            empresa.registrarRepuesto(r2);
+            empresa.registrarRepuesto(r3);
+            empresa.registrarRepuesto(r4);
+
+            // 5. CREACIÓN DE ÓRDENES Y DETALLES
+            // Orden 1 - Cliente 1001
+            empresa.crearOrden("ORD01", "1001", "El portátil no enciende y el teléfono tiene la pantalla rota.");
+
+            // Agregar detalles (Formatos de parámetros según tus métodos: codOrden, codDetalle, codEquipo, codServicio, falla)
+            empresa.agregarDetalle("ORD01", "DET01", "EQ01", "SERV01", "Fallo en encendido / posibles memorias RAM");
+            empresa.agregarDetalle("ORD01", "DET02", "EQ03", "SERV02", "Pantalla rota por caída");
+
+            // Asignaciones y repuestos para Orden 1
+            empresa.asignarTecnico("ORD01", "DET01", "TEC01");
+            empresa.asignarTecnico("ORD01", "DET02", "TEC02");
+            empresa.registrarRepuestoUtilizado("ORD01", "DET01", "REP02", 1); // Utiliza RAM
+
+            // Orden 2 - Cliente 1002 (Sin finalizar / Pendiente)
+            empresa.crearOrden("ORD02", "1002", "Mantenimiento preventivo general y cambio de pasta térmica.");
+            empresa.agregarDetalle("ORD02", "DET03", "EQ02", "SERV01", "Calentamiento excesivo en procesador");
+            empresa.asignarTecnico("ORD02", "DET03", "TEC01");
+
+        } catch (Exception e) {
+            System.out.println("Error al cargar los datos de prueba: " + e.getMessage());
+        }
     }
+
+    // Este metodo muestra varias opciones como botones para que el usuario elija una
+    public static String elegirOpcion(String mensaje, String[] opciones) {
+        String titulo = "Seleccione";
+        String opcionPorDefecto = opciones[0];
+        int indice = JOptionPane.showOptionDialog(null, mensaje, titulo,
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, opciones, opcionPorDefecto);
+        while (indice == -1) {
+            String mensajeError = "Debe seleccionar una opcion.\n" + mensaje;
+            indice = JOptionPane.showOptionDialog(null, mensajeError, titulo,
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                    null, opciones, opcionPorDefecto);
+        }
+        String opcionElegida = opciones[indice];
+        return opcionElegida;
+    }
+}
+
+
+
 
 
 

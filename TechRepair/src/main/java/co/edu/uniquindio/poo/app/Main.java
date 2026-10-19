@@ -91,12 +91,10 @@ public class Main {
                     consultarEquiposPendientes(empresa);
                     break;
                 case 16:
-                   empresa.generarReportesServicios();
-                   JOptionPane.showMessageDialog(null, "Reporte Servicios");
+                  generarReporteServicios(empresa);
                     break;
                 case 17:
-                    empresa.generarReporteTecnicos();
-                    JOptionPane.showMessageDialog(null, "Reporte de técnicos");
+                    generarReporteTecnicos(empresa);
                     break;
                 case 18:
                     consultarInventarioCritico(empresa);
@@ -306,6 +304,15 @@ public class Main {
         }
         JOptionPane.showMessageDialog(null,texto);
     }
+    private static void generarReporteServicios(Empresa empresa) {
+        String reporte = empresa.generarReportesServicios();
+        JOptionPane.showMessageDialog(null, reporte);
+    }
+
+    private static void generarReporteTecnicos(Empresa empresa) {
+        String reporte = empresa.generarReporteTecnicos();
+        JOptionPane.showMessageDialog(null, reporte);
+    }
 
     private static void consultarInventarioCritico(Empresa empresa) {
         List<Repuesto> criticos = empresa.consultarInvantarioCritico();
@@ -390,18 +397,18 @@ public class Main {
     }
     private static void cargarDatosPrueba(Empresa empresa) {
         try {
-            // 1. REGISTRO DE CLIENTES
-            Cliente c1 = new Cliente("1001", "Carlos Pérez", "3101234567", "carlos@email.com", "Calle 10 #14-20", new ArrayList<>(), empresa);
-            Cliente c2 = new Cliente("1002", "María Gómez", "3207654321", "maria@email.com", "Av. Bolivar #5-12", new ArrayList<>(), empresa);
-            Cliente c3 = new Cliente("1003", "Juan Rodriguez", "3001112233", "juan@email.com", "Cra 19 #22-10", new ArrayList<>(), empresa);
+            // 1. REGISTRO DE NUEVOS CLIENTES
+            Cliente c1 = new Cliente("1001", "Samuel Gómez", "3101234567", "samuel@email.com", "Calle 10 #14-20", new ArrayList<>(), empresa);
+            Cliente c2 = new Cliente("1002", "María Cardona", "3207654321", "maria@email.com", "Av. Bolivar #5-12", new ArrayList<>(), empresa);
+            Cliente c3 = new Cliente("1003", "Valeria Jiménez", "3001112233", "valeria@email.com", "Cra 19 #22-10", new ArrayList<>(), empresa);
 
             empresa.registrarCliente(c1);
             empresa.registrarCliente(c2);
             empresa.registrarCliente(c3);
 
-            // 2. REGISTRO DE EQUIPOS
+            // 2. REGISTRO DE EQUIPOS (Asignados a los nuevos clientes)
             Equipo eq1 = new ComputadorPortatil("EQ01", "SN-PORT-001", "Lenovo", "ThinkPad T14", 2022, "Bueno", c1, 14.0, 16, 512, false);
-            Equipo eq2 = new ComputadorEscritorio("EQ02", "SN-PC-002", "ASUS", "ROG Strix", 2023, "Excelente", c2, "Intel i7 13700K", 32, 1024, true);
+            Equipo eq2 = new ComputadorEscritorio("EQ02", "SN-PC-002", "ASUS", "ROG Strix", 2023, "Excelente", c2, "Intel i7", 32, 1024, true);
             Equipo eq3 = new TelefonoInteligente("EQ03", "SN-TEL-003", "Samsung", "Galaxy S23", 2023, "Pantalla rayada", c1, "Android", 256, 3900, true);
             Equipo eq4 = new ComputadorPortatil("EQ04", "SN-PORT-004", "HP", "Pavilion 15", 2021, "Desgastado", c3, 15.6, 8, 256, true);
 
@@ -410,52 +417,56 @@ public class Main {
             empresa.agregarEquipo("1001", eq3);
             empresa.agregarEquipo("1003", eq4);
 
-            // 3. REGISTRO DE TÉCNICOS
-            Tecnico t1 = new Tecnico("TEC01", "Andrés López", "80111", Especialidad.COMPUTADORES, EstadoTecnico.INACTIVO, new ArrayList<>(), empresa);
-            Tecnico t2 = new Tecnico("TEC02", "Laura Martínez", "80222", Especialidad.SOPORTE_GENERAL, EstadoTecnico.ACTIVO, new ArrayList<>(), empresa);
+            // 3. REGISTRO DE NUEVOS TÉCNICOS
+            Tecnico t1 = new Tecnico("TEC01", "Nicolás Cárdenas", "80111", Especialidad.COMPUTADORES, EstadoTecnico.ACTIVO, new ArrayList<>(), empresa);
+            Tecnico t2 = new Tecnico("TEC02", "Violeta Morales", "80222", Especialidad.SOPORTE_GENERAL, EstadoTecnico.INACTIVO, new ArrayList<>(), empresa);
 
             empresa.registrarTecnico(t1);
             empresa.registrarTecnico(t2);
 
             // 4. REGISTRO DE REPUESTOS
-            Repuesto r1 = new Repuesto("REP01", "SSD NVMe 512GB", "Disco de estado sólido Kingston", CategoriaEquipo.COMPUTADORES_PORTATILES, empresa, 10, 180000.0);
-            Repuesto r2 = new Repuesto("REP02", "Módulo RAM 8GB DDR4", "Memoria SODIMM Crucial", CategoriaEquipo.COMPUTADORES_PORTATILES, empresa, 2, 95000.0);
-            Repuesto r3 = new Repuesto("REP03", "Pantalla OLED S23", "Módulo original de pantalla", CategoriaEquipo.TELEFONO_INTELIGENTE, empresa, 1, 450000.0);
-            Repuesto r4 = new Repuesto("REP04", "Pasta Térmica 5g", "Artic MX-4 disipación alta", CategoriaEquipo.COMPUTADORES_ESCRITORIO, empresa, 15, 35000.0);
+            Repuesto r1 = new Repuesto("REP01", "SSD NVMe 512GB", "Disco estado sólido", CategoriaEquipo.COMPUTADORES_PORTATILES, empresa, 10, 180000.0);
+            Repuesto r2 = new Repuesto("REP02", "Módulo RAM 8GB", "Memoria SODIMM", CategoriaEquipo.COMPUTADORES_PORTATILES, empresa, 2, 95000.0);
+            Repuesto r3 = new Repuesto("REP03", "Pantalla OLED", "Módulo de pantalla", CategoriaEquipo.TELEFONO_INTELIGENTE, empresa, 1, 450000.0);
+            Repuesto r4 = new Repuesto("REP04", "Pasta Térmica", "Disipación alta", CategoriaEquipo.COMPUTADORES_ESCRITORIO, empresa, 15, 35000.0);
 
             empresa.registrarRepuesto(r1);
             empresa.registrarRepuesto(r2);
             empresa.registrarRepuesto(r3);
             empresa.registrarRepuesto(r4);
 
-            // 5. ÓRDENES Y DETALLES DE SERVICIO
+            // 5. ÓRDENES, DETALLES, TRABAJOS Y ESTADOS
 
-            // --- Orden 1 ---
+            // --- ORDEN 01 (Finalizada) ---
             empresa.crearOrden("ORD01", "1001", "El portátil no enciende y el teléfono tiene la pantalla rota.");
 
             empresa.agregarDetalle("ORD01", "DET01", "EQ01", "SERV01", "Fallo en encendido / posibles memorias RAM");
             empresa.agregarDetalle("ORD01", "DET02", "EQ03", "SERV02", "Pantalla rota por caída");
 
-            empresa.asignarTecnico("ORD01", "DET01", "TEC01");
-            empresa.asignarTecnico("ORD01", "DET02", "TEC02");
+            empresa.asignarTecnico("ORD01", "DET01", "TEC01"); // Asignado a Nicolás Cárdenas
+            empresa.asignarTecnico("ORD01", "DET02", "TEC02"); // Asignado a Violeta Morales
 
-            empresa.registrarRepuestoUtilizado("ORD01", "DET01", "REP02", 1);
+            empresa.registrarHorasTrabajo("ORD01", "DET01", 3.0);
+            empresa.registrarHorasTrabajo("ORD01", "DET02", 2.0);
+
+            empresa.registrarRepuestoUtilizado("ORD01", "DET01", "REP01", 1);
             empresa.registrarRepuestoUtilizado("ORD01", "DET02", "REP03", 1);
 
-            empresa.cambiarEstadoOrden("ORD01", "DET01", EstadoDetalle.FINALIZADO, "Instalación de módulo RAM realizada con éxito.");
+            empresa.cambiarEstadoOrden("ORD01", "DET01", EstadoDetalle.FINALIZADO, "Instalación de SSD realizada con éxito.");
             empresa.cambiarEstadoOrden("ORD01", "DET02", EstadoDetalle.FINALIZADO, "Cambio de pantalla completado.");
 
-            // --- Orden 2 ---
+            // --- ORDEN 02 (En Proceso) ---
             empresa.crearOrden("ORD02", "1002", "Mantenimiento preventivo general y cambio de pasta térmica.");
 
             empresa.agregarDetalle("ORD02", "DET03", "EQ02", "SERV01", "Calentamiento excesivo en procesador");
 
-            empresa.asignarTecnico("ORD02", "DET03", "TEC01");
+            empresa.asignarTecnico("ORD02", "DET03", "TEC01"); // Asignado a Nicolás Cárdenas
+            empresa.registrarHorasTrabajo("ORD02", "DET03", 1.5);
             empresa.registrarRepuestoUtilizado("ORD02", "DET03", "REP04", 1);
 
-            empresa.cambiarEstadoOrden("ORD02", "DET03", EstadoDetalle.EN_PROCESO, "Mantenimiento interno en ejecución.");
+            empresa.cambiarEstadoOrden("ORD02", "DET03", EstadoDetalle.EN_PROCESO, "Mantenimiento en ejecución.");
 
-            // --- Orden 3 (Pendiente de atención) ---
+            // --- ORDEN 03 (Pendiente) ---
             empresa.crearOrden("ORD03", "1003", "Revisión de bisagra y mantenimiento general.");
             empresa.agregarDetalle("ORD03", "DET04", "EQ04", "SERV01", "Bisagra izquierda dura al abrir");
 

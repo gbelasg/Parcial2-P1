@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b6cd857-89cb-453b-a715-758177364cfe" name="Changes" comment="modificacion MAIN">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="1b6cd857-89cb-453b-a715-758177364cfe" name="Changes" comment="modificacion" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -118,9 +116,9 @@
     <MESSAGE value="cambios, correciones y updates" />
     <MESSAGE value=" correciones y updates en el main" />
     <MESSAGE value="CARGAR DATOS PRUEBA" />
-    <MESSAGE value="modificacion" />
     <MESSAGE value="modificacion MAIN" />
-    <option name="LAST_COMMIT_MESSAGE" value="modificacion MAIN" />
+    <MESSAGE value="modificacion" />
+    <option name="LAST_COMMIT_MESSAGE" value="modificacion" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

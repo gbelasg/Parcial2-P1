@@ -31,13 +31,13 @@ public class Main {
                 + "11. Actualizar estado de un detalle\n"
                 + "12. Finalizar una orden\n"
                 + "13. Consultar ordenes de un cliente\n"
-                + "14. Consultar trabajos de un tecnico"
+                + "14. Consultar trabajos de un tecnico\n"
                 + "15. Consultar equipos pendientes\n"
                 + "16. Generar reportes pendientes\n"
                 + "17. Generar reporte de tecnicos\n"
-                + "18. Consultar inventario critico"
-                + "0. Salir"
-                + "DIGITE UNA OPCIÓN: ";
+                + "18. Consultar inventario critico\n"
+                + "0. Salir\n"
+                + "DIGITE UNA OPCIÓN: \n ";
 
         int opcion;
 

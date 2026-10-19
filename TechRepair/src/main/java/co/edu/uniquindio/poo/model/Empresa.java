@@ -41,11 +41,12 @@ public class Empresa {
     public String registrarCliente(Cliente cliente){
         Optional<Cliente> clienteEncontrado= buscarCliente(cliente.getDocumentoIdentidad());
         if (clienteEncontrado.isPresent()){
+            return "Ya hiciste un cliente registrado con ese  documento de identidad";
+
+        }else{
             listaClientes.add(cliente);
             return"El cliente ha sido registrado exitosamente";
 
-        }else{
-            return "Ya hiciste un cliente registrado con ese  documento de identidad";
         }
     }
     public Optional<Cliente> buscarCliente(String documentoIdentidad){
@@ -140,11 +141,11 @@ public class Empresa {
     public String registrarTecnico(Tecnico tecnico){
         Optional<Tecnico> tecnicoEncontrado= buscarTecnico(tecnico.getCodigo());
         if (tecnicoEncontrado.isPresent()){
-            return "Ya hiciste un cliente registrado con ese  documento de identidad";
+            return "Ya hiciste un tecnico registrado con ese  codigo";
 
         }else{
             listaTecnicos.add(tecnico);
-            return"El cliente ha sido registrado exitosamente";
+            return"El tecnico ha sido registrado exitosamente";
         }
     }
     public Optional<Tecnico> buscarTecnico(String codigo){
@@ -184,10 +185,10 @@ public class Empresa {
     public String registrarRepuesto(Repuesto repuesto){
         Optional<Repuesto> repuestoEncontrado= buscarRespuesto(repuesto.getCoodigo());
         if (repuestoEncontrado.isPresent()){
-            return "Ya hiciste un cliente registrado con ese  documento de identidad";
+            return "Ya hiciste un repuesto registrado con ese  codigo";
         }else{
             listaRepuestos.add(repuesto);
-            return"El cliente ha sido registrado exitosamente";
+            return"El repuesto ha sido registrado exitosamente";
         }
     }
     public Optional<Repuesto> buscarRespuesto(String codigo){

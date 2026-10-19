@@ -411,18 +411,16 @@ public class Main {
             empresa.agregarEquipo("1003", eq4);
 
             // 3. REGISTRO DE TÉCNICOS
-            // Ajusta las especialidades y estados según los valores reales de tus Enums
-            Tecnico t1 = new Tecnico("TEC01", "Andrés López", "80111", Especialidad.COMPUTADORES, EstadoTecnico.ACTIVO, new ArrayList<>(), empresa);
+            Tecnico t1 = new Tecnico("TEC01", "Andrés López", "80111", Especialidad.COMPUTADORES, EstadoTecnico.INACTIVO, new ArrayList<>(), empresa);
             Tecnico t2 = new Tecnico("TEC02", "Laura Martínez", "80222", Especialidad.SOPORTE_GENERAL, EstadoTecnico.ACTIVO, new ArrayList<>(), empresa);
 
             empresa.registrarTecnico(t1);
             empresa.registrarTecnico(t2);
 
             // 4. REGISTRO DE REPUESTOS
-            // (incluye algunos con bajo stock para probar la consulta de inventario crítico)
             Repuesto r1 = new Repuesto("REP01", "SSD NVMe 512GB", "Disco de estado sólido Kingston", CategoriaEquipo.COMPUTADORES_PORTATILES, empresa, 10, 180000.0);
-            Repuesto r2 = new Repuesto("REP02", "Módulo RAM 8GB DDR4", "Memoria SODIMM Crucial", CategoriaEquipo.COMPUTADORES_PORTATILES, empresa, 2, 95000.0); // Stock crítico
-            Repuesto r3 = new Repuesto("REP03", "Pantalla OLED S23", "Módulo original de pantalla", CategoriaEquipo.TELEFONO_INTELIGENTE, empresa, 1, 450000.0); // Stock crítico
+            Repuesto r2 = new Repuesto("REP02", "Módulo RAM 8GB DDR4", "Memoria SODIMM Crucial", CategoriaEquipo.COMPUTADORES_PORTATILES, empresa, 2, 95000.0);
+            Repuesto r3 = new Repuesto("REP03", "Pantalla OLED S23", "Módulo original de pantalla", CategoriaEquipo.TELEFONO_INTELIGENTE, empresa, 1, 450000.0);
             Repuesto r4 = new Repuesto("REP04", "Pasta Térmica 5g", "Artic MX-4 disipación alta", CategoriaEquipo.COMPUTADORES_ESCRITORIO, empresa, 15, 35000.0);
 
             empresa.registrarRepuesto(r1);
@@ -430,23 +428,36 @@ public class Main {
             empresa.registrarRepuesto(r3);
             empresa.registrarRepuesto(r4);
 
-            // 5. CREACIÓN DE ÓRDENES Y DETALLES
-            // Orden 1 - Cliente 1001
+            // 5. ÓRDENES Y DETALLES DE SERVICIO
+
+            // --- Orden 1 ---
             empresa.crearOrden("ORD01", "1001", "El portátil no enciende y el teléfono tiene la pantalla rota.");
 
-            // Agregar detalles (Formatos de parámetros según tus métodos: codOrden, codDetalle, codEquipo, codServicio, falla)
             empresa.agregarDetalle("ORD01", "DET01", "EQ01", "SERV01", "Fallo en encendido / posibles memorias RAM");
             empresa.agregarDetalle("ORD01", "DET02", "EQ03", "SERV02", "Pantalla rota por caída");
 
-            // Asignaciones y repuestos para Orden 1
             empresa.asignarTecnico("ORD01", "DET01", "TEC01");
             empresa.asignarTecnico("ORD01", "DET02", "TEC02");
-            empresa.registrarRepuestoUtilizado("ORD01", "DET01", "REP02", 1); // Utiliza RAM
 
-            // Orden 2 - Cliente 1002 (Sin finalizar / Pendiente)
+            empresa.registrarRepuestoUtilizado("ORD01", "DET01", "REP02", 1);
+            empresa.registrarRepuestoUtilizado("ORD01", "DET02", "REP03", 1);
+
+            empresa.cambiarEstadoOrden("ORD01", "DET01", EstadoDetalle.FINALIZADO, "Instalación de módulo RAM realizada con éxito.");
+            empresa.cambiarEstadoOrden("ORD01", "DET02", EstadoDetalle.FINALIZADO, "Cambio de pantalla completado.");
+
+            // --- Orden 2 ---
             empresa.crearOrden("ORD02", "1002", "Mantenimiento preventivo general y cambio de pasta térmica.");
+
             empresa.agregarDetalle("ORD02", "DET03", "EQ02", "SERV01", "Calentamiento excesivo en procesador");
+
             empresa.asignarTecnico("ORD02", "DET03", "TEC01");
+            empresa.registrarRepuestoUtilizado("ORD02", "DET03", "REP04", 1);
+
+            empresa.cambiarEstadoOrden("ORD02", "DET03", EstadoDetalle.EN_PROCESO, "Mantenimiento interno en ejecución.");
+
+            // --- Orden 3 (Pendiente de atención) ---
+            empresa.crearOrden("ORD03", "1003", "Revisión de bisagra y mantenimiento general.");
+            empresa.agregarDetalle("ORD03", "DET04", "EQ04", "SERV01", "Bisagra izquierda dura al abrir");
 
         } catch (Exception e) {
             System.out.println("Error al cargar los datos de prueba: " + e.getMessage());

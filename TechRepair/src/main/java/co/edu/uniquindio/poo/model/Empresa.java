@@ -367,8 +367,8 @@ public class Empresa {
                 mensaje+=
                         "Orden " + ordenServicio.getCodigo()
                                 + " Fecha: " + ordenServicio.getFecha()
-                                + " | Estado: " + ordenServicio.getEstado()
-                                + " | Valor total: $" + ordenServicio.calcularTotal() ;
+                                + "  Estado: " + ordenServicio.getEstado()
+                                + "  Valor total: $" + ordenServicio.calcularTotal() ;
 
                 for (DetalleServicio detalleServicio : ordenServicio.getListaDetalles()) {
                     mensaje +=  detalleServicio.getCodigo()
@@ -393,12 +393,12 @@ public class Empresa {
         }
         Tecnico tecnico = tecnicoEncontrado.get();
 
-        String texto = "Técnico: " + tecnico.getNombre() + " (" + tecnico.getCodigo() + ")\n\n";
-        texto += listarDetallesPorEstado(tecnico, EstadoDetalle.PENDIENTE);
-        texto += listarDetallesPorEstado(tecnico, EstadoDetalle.EN_PROCESO);
-        texto += listarDetallesPorEstado(tecnico, EstadoDetalle.FINALIZADO);
-        texto += listarDetallesPorEstado(tecnico, EstadoDetalle.CANCELADO);
-        return texto;
+        String mensaje = "Técnico: " + tecnico.getNombre() + " (" + tecnico.getCodigo() + ")\n\n";
+        mensaje += listarDetallesPorEstado(tecnico, EstadoDetalle.PENDIENTE);
+        mensaje += listarDetallesPorEstado(tecnico, EstadoDetalle.EN_PROCESO);
+        mensaje += listarDetallesPorEstado(tecnico, EstadoDetalle.FINALIZADO);
+        mensaje += listarDetallesPorEstado(tecnico, EstadoDetalle.CANCELADO);
+        return mensaje;
     }
     //metodo auxiliar del anterior
     private String listarDetallesPorEstado(Tecnico tecnico, EstadoDetalle estado) {
@@ -406,8 +406,8 @@ public class Empresa {
         boolean hayDetalles = false;
         for (DetalleServicio detalleServicio : tecnico.getListaDetallesAsignados()) {
             if (detalleServicio.getEstado() == estado) {
-                mensaje += "   - " + detalleServicio.getCodigo() + " | " + detalleServicio.getServicio().getNombre()
-                        + " | Equipo: " + detalleServicio.getEquipo().getCodigo() + "\n";
+                mensaje += "   - " + detalleServicio.getCodigo() + detalleServicio.getServicio().getNombre()
+                        + "  Equipo: " + detalleServicio.getEquipo().getCodigo() + "\n";
                 hayDetalles = true;
             }
         }

@@ -154,7 +154,7 @@ public class DetalleServicio {
             devolverRepuestos();
         }
         if (observaciones != null && !observaciones.isBlank()) {
-            observaciones = observaciones;
+            this.observaciones = observaciones;
         }
         estado = nuevoEstado;
         if (ownedByOrden != null) {

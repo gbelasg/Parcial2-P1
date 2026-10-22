@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b6cd857-89cb-453b-a715-758177364cfe" name="Changes" comment="cambio en el orden del menu">
+    <list default="true" id="1b6cd857-89cb-453b-a715-758177364cfe" name="Changes" comment="eliminación de ciertos mensajes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/model/Empresa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/model/Empresa.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/poo/model/TipoServicio.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +123,8 @@
     <MESSAGE value="modificacion MAIN" />
     <MESSAGE value="modificacion" />
     <MESSAGE value="cambio en el orden del menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="cambio en el orden del menu" />
+    <MESSAGE value="eliminación de ciertos mensajes" />
+    <option name="LAST_COMMIT_MESSAGE" value="eliminación de ciertos mensajes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

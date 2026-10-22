@@ -461,6 +461,19 @@ public class Empresa {
         return listaRepuestos.stream().filter(Repuesto::esCritico).toList();
     }
 
+    public List<Cliente> obtenerClientesDiagnosticoCelular(){
+         List <Cliente> celulares= new ArrayList<>();
+         for (OrdenServicio o: listaOrdenes){
+             for (DetalleServicio detalleServicio: o.getListaDetalles()){
+                 if (detalleServicio.getEquipo()instanceof TelefonoInteligente  && detalleServicio.getServicio()instanceof Diagnostico){
+
+
+
+                 }
+             }
+         }
+    }
+
 
 
 
